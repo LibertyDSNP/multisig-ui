@@ -21,6 +21,19 @@
             padding: 0 0 0.5em 0;
         }
 
+        button.small {
+            font-size: smaller;
+            border: none;
+            background-color: white;
+            color: var(--color-link);
+            padding: 0;
+            margin: 0.5rem;
+            display: block;
+        }
+        button.small:disabled {
+            color: var(--color-text-secondary);
+        }
+
         .pending-multisig {
             padding: 1rem;
             border-bottom: 1px solid black;
@@ -90,11 +103,11 @@
             <div class="multisig-time-release"></div>
             <label for="callData">
                 Call Data <small>(Edit to update)</small>
-                <input title="Click out to update" name="callData" class="callData" />
+                <input title="Click out to update" name="callData" class="callData" style="width: 100%" />
             </label>
             <div class="signingSection">
                 <button class="countersign countersignExe">Authorize and Execute</button>
-                <button class="countersign countersignAuth">Authorize Only</button>
+                <button class="countersign countersignAuth">Authorize only without executing</button>
                 <span style="margin: 2rem" class="loader"></span><br>
             </div>
         </div>

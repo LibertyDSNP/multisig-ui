@@ -136,6 +136,8 @@ async function pendingTransactionUpdate(tx, el) {
         buttonAuth.dataset.when = JSON.stringify(tx.when);
         buttonAuth.setAttribute("title", `With Account: ${sender}`);
         buttonAuth.disabled = isApproved;
+        buttonAuth.classList.remove("small")
+        if (tx.hexCallData) buttonAuth.classList.add("small");
 
         signingSection.style.display = "block";
     } else {
