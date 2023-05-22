@@ -32,9 +32,7 @@ export async function loadApi(providerUri) {
 
     // Singleton Provider because it starts trying to connect here.
     singletonProvider = new WsProvider(providerUri);
-    singletonApi = await ApiPromise.create({ provider: singletonProvider });
-
-    await singletonApi.isReady;
+    singletonApi = await ApiPromise.create({ provider: singletonProvider, throwOnConnect: true });
     const chain = await singletonApi.rpc.system.properties();
     PREFIX = Number(chain.ss58Format.toString());
     UNIT = chain.tokenSymbol.toHuman();
@@ -46,15 +44,32 @@ export async function loadApi(providerUri) {
 // Connect to the wallet and blockchain
 const connect = (postConnect) => async (event) => {
     event.preventDefault();
+    const connectError = document.getElementById("connectError");
+    const connectButton = document.getElementById("connectButton");
+    connectError.innerHTML = "";
+    connectError.style.display = "none";
+
+    connectButton.innerHTML = "Connecting...";
+    connectButton.disabled = true;
+
     let provider = document.getElementById("provider").value;
     if (provider === "custom") {
         provider = document.getElementById("providerCustom").value;
     }
-    await loadApi(provider);
-    isConnected = true;
-    await postConnect();
+    try {
+        await loadApi(provider);
+        isConnected = true;
+        connectError.innerHTML = "";
+        connectError.style.display = "none";
+        await postConnect();
 
-    toggleConnectedVisibility(true, provider);
+        toggleConnectedVisibility(true, provider);
+    } catch (_e) {
+        connectError.style.display = "block";
+        connectError.innerHTML = "Failed to connect. Check the connection URL: " + provider;
+    }
+    connectButton.innerHTML = "Connect to Node";
+    connectButton.disabled = false;
 }
 
 // Reset
