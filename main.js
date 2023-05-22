@@ -325,17 +325,19 @@ async function getPendingMultisigTransactions(address) {
 }
 
 let cachedAccounts = null;
+let cachedAccountsMs = null;
 const getAccounts = async (multisigCheck = false) => {
     if (!cachedAccounts) cachedAccounts = await web3Accounts();
 
     if (!multisigCheck) return cachedAccounts;
+    if (cachedAccountsMs) return cachedAccountsMs;
 
     const addresses = multisigProcess(false);
 
     if (!addresses || !addresses[2]) return [];
 
-    const msSet = new Set(addresses[2]);
-    return cachedAccounts.filter(x => msSet.has(x.address));
+    const msSet = new Set(addresses[2].map(x => encodeAddress(x, getPrefix())));
+    return cachedAccountsMs = cachedAccounts.filter(x => msSet.has(encodeAddress(x.address, getPrefix())));
 }
 
 // Post node connection, connect to the wallet
