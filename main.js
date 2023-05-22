@@ -60,7 +60,7 @@ function multisigProcess(showError = false) {
         });
 
         const multisigAddress = encodeAddress(createKeyMulti(multisigSignatories, multisigThreshold), getPrefix());
-        return [multisigAddress, multisigThreshold, multisigSignatories];
+        return [multisigAddress, multisigThreshold, multisigSignatories.map(a => encodeAddress(a, getPrefix()))];
     } catch (e) {
         if (showError) element.setCustomValidity(`Multisig setup is invalid. Wrong threshold or bad signatories: ${e.toString()}`);
         return null;
@@ -202,7 +202,8 @@ async function signTransaction(section, sender, txHash, timepoint, callData) {
 
     const [_multisigAddress, multisigThreshold, multisigSignatories] = multisigResult;
     // We need to remove the sender and sort correctly before asMulti can be used.
-    const sortedOthers = multisigSignatories.filter(x => x != sender).sort(multisigSort);
+    const senderEncoded = encodeAddress(sender, getPrefix());
+    const sortedOthers = multisigSignatories.filter(x => x !== senderEncoded).sort(multisigSort);
     const maxWeight = { refTime: 4_000_000_000 };
 
     const injector = await web3FromAddress(sender);
