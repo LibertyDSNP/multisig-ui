@@ -49,15 +49,18 @@ function multisigProcess(showError = false) {
         return null;
     }
     try {
-        multisigSignatories.forEach(signatory => {
+        for (const signatory of multisigSignatories) {
             try {
                 const check = checkAddress(encodeAddress(signatory, getPrefix()), getPrefix());
                 if (!check[0]) {
                     if (showError) element.setCustomValidity(`Signatory address "${signatory}" is invalid: ${check[1] || "unknown"}`);
                     return null;
                 }
-            } catch (_e) { }
-        });
+            } catch (e) {
+                if (showError) element.setCustomValidity(`Signatory address "${signatory}" is invalid: ${e.message || "unknown"}`);
+                return null;
+            }
+        }
 
         const multisigAddress = encodeAddress(createKeyMulti(multisigSignatories, multisigThreshold), getPrefix());
         return [multisigAddress, multisigThreshold, multisigSignatories.map(a => encodeAddress(a, getPrefix()))];
@@ -229,7 +232,7 @@ async function processSubmission() {
 
     // Generate Multisig
 
-    const multisigResult = multisigProcess(true);
+    const multisigResult = multisigProcess(false);
     if (multisigResult === null) {
         pendingTransactions.innerHTML = "...";
         inProgress(false);
@@ -382,6 +385,8 @@ function init() {
         updateUrl();
         processSubmission();
     });
+
+    document.getElementById("multisigSignatories").addEventListener("blur", () => multisigProcess(true));
 
     document.addEventListener("click", async (e) => {
         if (!e.target.classList.contains("countersign")) return;
