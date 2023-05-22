@@ -219,8 +219,6 @@ async function signTransaction(section, sender, txHash, timepoint, callData) {
     } catch (e) {
         postTransaction(section)(e.message);
     }
-
-    await sending;
 }
 
 async function processSubmission() {
