@@ -1,7 +1,7 @@
 import { blake2AsHex, checkAddress, decodeAddress } from 'https://cdn.jsdelivr.net/npm/@polkadot/util-crypto@10.2.2/+esm';
 import { encodeAddress, createKeyMulti } from 'https://cdn.jsdelivr.net/npm/@polkadot/util-crypto@11.1.3/+esm';
 import { web3Accounts, web3Enable, web3FromAddress } from 'https://cdn.jsdelivr.net/npm/@polkadot/extension-dapp@0.45.5/+esm';
-import { loadApi, getIsConnected, initConnection, toDecimalUnit, getPrefix, getUnit, getCurrentRelayChainBlockNumber } from './api.js';
+import { loadApi, getIsConnected, initConnection, toDecimalUnit, getPrefix, getProviderUrl, getUnit, getCurrentRelayChainBlockNumber } from './api.js';
 import { getParameterByName, setUrlParameter } from './url.js';
 
 // Simple loading and button blocker
@@ -172,7 +172,7 @@ const postTransaction = (section) => (status) => {
         msg = "In Block";
     } else if (status.isFinalized) {
         const finalizedBlock = status.status.asFinalized.toHuman();
-        msg = `Finalized: ${finalizedBlock}`;
+        msg = `Finalized: <a target="_blank" title="Block Details" href="https://polkadot.js.org/apps/?rpc=${getProviderUrl()}#/explorer/query/${finalizedBlock}">${finalizedBlock}</a>`;
         completed(true);
     } else if (status.isError) {
         msg = `Error: ${status.status.toHuman()}`;

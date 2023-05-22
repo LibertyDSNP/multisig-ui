@@ -7,11 +7,13 @@ let PREFIX = 42;
 let UNIT = "UNIT";
 let DECIMALS = 8;
 let isConnected = false;
+let providerUrl = "";
 
 export function getDecimals() { return DECIMALS; }
 export function getUnit() { return UNIT; }
 export function getPrefix() { return PREFIX; }
 export function getIsConnected() { return isConnected; }
+export function getProviderUrl() { return providerUrl; }
 
 // Load up the api for the given provider uri
 export async function loadApi(providerUri) {
@@ -37,6 +39,7 @@ export async function loadApi(providerUri) {
     PREFIX = Number(chain.ss58Format.toString());
     UNIT = chain.tokenSymbol.toHuman();
     DECIMALS = chain.tokenDecimals.toJSON()[0];
+    providerUrl = providerUri;
     document.querySelectorAll(".unit").forEach(e => e.innerHTML = UNIT);
     return singletonApi;
 }
