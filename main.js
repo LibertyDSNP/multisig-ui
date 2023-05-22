@@ -207,7 +207,7 @@ async function signTransaction(section, sender, txHash, timepoint, callData) {
     // We need to remove the sender and sort correctly before asMulti can be used.
     const senderEncoded = encodeAddress(sender, getPrefix());
     const sortedOthers = multisigSignatories.filter(x => x !== senderEncoded).sort(multisigSort);
-    const maxWeight = { refTime: 4_000_000_000 };
+    const maxWeight = { refTime: 250_000_000 };
 
     const injector = await web3FromAddress(sender);
 
