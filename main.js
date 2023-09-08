@@ -1,6 +1,5 @@
-import { blake2AsHex, checkAddress, decodeAddress } from 'https://cdn.jsdelivr.net/npm/@polkadot/util-crypto@10.2.2/+esm';
-import { encodeAddress, createKeyMulti } from 'https://cdn.jsdelivr.net/npm/@polkadot/util-crypto@11.1.3/+esm';
-import { web3Accounts, web3Enable, web3FromAddress } from 'https://cdn.jsdelivr.net/npm/@polkadot/extension-dapp@0.45.5/+esm';
+import { blake2AsHex, checkAddress, decodeAddress, encodeAddress, createKeyMulti } from 'https://cdn.jsdelivr.net/npm/@polkadot/util-crypto@12.3.1/+esm';
+import { web3Accounts, web3Enable, web3FromAddress } from 'https://cdn.jsdelivr.net/npm/@polkadot/extension-dapp@0.46.5/+esm';
 import { loadApi, getIsConnected, initConnection, toDecimalUnit, getPrefix, getProviderUrl, getUnit, getCurrentRelayChainBlockNumber } from './api.js';
 import { getParameterByName, setUrlParameter } from './url.js';
 
