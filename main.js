@@ -158,6 +158,40 @@ const multisigSort = (a, b) => {
     return 0;
 }
 
+const hasSuccess = (status) => {
+    const events = status.events.map(x => x.toHuman());
+    const success = events.find(x => x.event.method === "ExtrinsicSuccess");
+    return !!success;
+}
+
+function printEventData(data) {
+    let ret = "";
+    for (const key in data) {
+        const d = data[key];
+        if (typeof d !== 'object') {
+            ret += "<li>" + key + " : " + d + "</li>";
+        } else {
+            ret += "<li>" + key + " : " + printEventData(d) + "</li>";
+        }
+    }
+    return "<ul>" + ret + "</ul>";
+}
+
+function printEvents(status) {
+    const events = status.events.map(x => x.toHuman().event);
+    let ret = "";
+    for (const key in events) {
+        const event = events[key];
+        if (typeof event === 'object' && event.method && event.data) {
+            ret += "<li>" + event.method + " : " + printEventData(event.data) + "</li>";
+        } else {
+            ret += "<li>" + key + " : " + event + "</li>";
+        }
+    }
+    return "<ul>" + ret + "</ul>";
+}
+
+
 // Function for after the transaction has been submitted
 const postTransaction = (section) => (status) => {
     const completed = (disabled) => {
@@ -174,10 +208,17 @@ const postTransaction = (section) => (status) => {
         msg = "In Block";
     } else if (status.isFinalized) {
         const finalizedBlock = status.status.asFinalized.toHuman();
-        msg = `Finalized: <a target="_blank" title="Block Details" href="https://polkadot.js.org/apps/?rpc=${getProviderUrl()}#/explorer/query/${finalizedBlock}">${finalizedBlock}</a>`;
-        completed(true);
+        if (hasSuccess(status)) {
+            msg = `Finalized: <a target="_blank" title="Block Details" href="https://polkadot.js.org/apps/?rpc=${getProviderUrl()}#/explorer/query/${finalizedBlock}">${finalizedBlock}</a>`;
+            completed(true);
+        } else {
+            msg = `<span style="color: red; font-weight: bold;">POSSIBLE ERROR!!</span> Please check finalized block: <a target="_blank" title="Block Details" href="https://polkadot.js.org/apps/?rpc=${getProviderUrl()}#/explorer/query/${finalizedBlock}">${finalizedBlock}</a>`;
+            msg += "<br />";
+            msg += printEvents(status);
+            completed(false);
+        }
     } else if (status.isError) {
-        msg = `Error: ${status.status.toHuman()}`;
+        msg = `<span style="color: red;">Error</span>: ${status.status.toHuman()}`;
         completed(false);
     } else if (status.status.isReady) {
         msg = "Sent";
