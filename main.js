@@ -116,6 +116,7 @@ async function pendingTransactionUpdate(tx, el) {
     }
 
     const signingSection = el.querySelector(".signingSection");
+    const walletAddressNotFound = el.querySelector(".walletAddressNotFound");
     // Filter to just accounts in the wallet and ones that have not signed it
     const walletSigningAccounts = (await getAccounts(true)).filter(x => isApproved || !approvedAddresses.includes(x.address));
     if (walletSigningAccounts.length > 0) {
@@ -142,8 +143,10 @@ async function pendingTransactionUpdate(tx, el) {
         if (tx.hexCallData) buttonAuth.classList.add("small");
 
         signingSection.style.display = "block";
+        walletAddressNotFound.style.display = "none";
     } else {
         signingSection.style.display = "none";
+        walletAddressNotFound.style.display = "block";
     }
 }
 

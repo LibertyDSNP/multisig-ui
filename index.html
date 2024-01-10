@@ -40,6 +40,13 @@
             border-top: 1px solid black;
         }
 
+        .walletAddressNotFound {
+            padding: 1rem;
+            color: red;
+            font-weight: bold;
+            display: none;
+        }
+
         .hideProcessing,
         .showConnected {
             display: none;
@@ -105,6 +112,9 @@
                 Call Data <small>(Edit to update)</small>
                 <input title="Click out to update" name="callData" class="callData" style="width: 100%" />
             </label>
+            <div class="walletAddressNotFound">
+                Notice: The connected wallet extension does not have any addresses that match the multisig participants.
+            </div>
             <div class="signingSection">
                 <button class="countersign countersignExe">Authorize and Execute</button>
                 <button class="countersign countersignAuth">Authorize only without executing</button>
